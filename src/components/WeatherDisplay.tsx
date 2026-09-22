@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getWeatherForCity, WeatherApiError } from "../api/weather";
 import type { WeatherResult } from "../types/weather";
 import { getWeatherCodeInfo } from "../utils/weatherCodes";
+import { formatLocalTime } from "../utils/formatTime";
 
 interface WeatherDisplayProps {
   city: string;
@@ -70,6 +71,7 @@ function WeatherDisplay({ city }: WeatherDisplayProps) {
           {location.name}
           {location.admin1 ? `, ${location.admin1}` : ""}, {location.country}
         </h2>
+        <p className="local-time">{formatLocalTime(current.time)}</p>
       </div>
       <p className="weather-icon">{icon}</p>
       <p className="temperature">{Math.round(current.temperature)}°C</p>

@@ -79,6 +79,16 @@
   margin: 0;
 }
 
+.local-time {
+  margin: 0;
+  padding: 3px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+}
+
 .country-flag {
   width: 44px;
   height: 44px;

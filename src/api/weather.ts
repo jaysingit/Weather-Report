@@ -66,6 +66,7 @@ async function fetchCurrentWeather(
       windSpeed: current.wind_speed_10m,
       weatherCode: current.weather_code,
       isDay: current.is_day === 1,
+      time: current.time,
     },
   };
 }
