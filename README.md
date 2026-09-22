@@ -1,78 +1,68 @@
-# React + TypeScript + Vite
+# Weatherly
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A weather app for checking current conditions anywhere in the world. Search any city to see live temperature, humidity, wind, and conditions, powered by the free, keyless [Open-Meteo](https://open-meteo.com/) geocoding and forecast APIs. Built with React, TypeScript, and Vite, and hosted as a static site on GitHub Pages — no backend, no database.
 
-Currently, two official plugins are available:
+**Live site:** https://jaysingit.github.io/Weather-Report/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- Search any city worldwide and get current weather (temperature, feels-like, humidity, wind, conditions)
+- Country flag and the city's own local time shown on the result card (Open-Meteo refreshes current conditions on a 15-minute interval, so the time reflects the latest available reading, not the live second)
+- Loading and error states for invalid/unmatched searches
+- Reset button to clear the search and result back to default
+- No API key or backend required — calls Open-Meteo directly from the browser
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Tech stack
 
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
+- [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vite.dev/) for dev server and build
+- [Open-Meteo](https://open-meteo.com/) geocoding + forecast APIs
+- GitHub Pages + GitHub Actions for hosting/deployment
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Project structure
 
 ```
-
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+src/
+  api/
+    weather.ts          # Open-Meteo geocoding + forecast API calls
+  components/
+    SearchBar.tsx        # City input, submit and reset controls
+    WeatherDisplay.tsx   # Fetches and renders the weather card
+  types/
+    weather.ts           # Shared TypeScript types
+  utils/
+    formatTime.ts        # Formats the location's local time
+    weatherCodes.ts       # WMO weather code -> description/icon lookup
+  App.tsx                 # Page layout and top-level state
+  App.css                 # App-specific styles
+  index.css               # Global styles, theme variables, background
+  main.tsx                 # React entry point
+public/
+  favicon.svg              # Weather-themed favicon
+.github/workflows/
+  deploy.yml                # Builds and deploys to GitHub Pages on push to main
 ```
+
+## Getting started
+
+Requires [Node.js](https://nodejs.org/) 20+.
+
+```bash
+npm install
+npm run dev
+```
+
+This starts the Vite dev server (prints the local URL to open in your browser).
+
+## Available scripts
+
+| Command           | Description                                      |
+| ----------------- | ------------------------------------------------ |
+| `npm run dev`     | Start the local dev server with hot reload       |
+| `npm run build`   | Type-check and build for production into `dist/` |
+| `npm run preview` | Preview the production build locally             |
+| `npm run lint`    | Run ESLint                                       |
+
+## Deployment
+
+Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds the app and deploys `dist/` to GitHub Pages automatically (requires **Settings → Pages → Source: GitHub Actions** to be set once in the repo). The Vite `base` in `vite.config.ts` is set to `/Weather-Report/` to match this repo's Pages URL.
