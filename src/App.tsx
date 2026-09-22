@@ -9,7 +9,7 @@ function App() {
   return (
     <div className="page">
       <header className="page-header">
-        <h1>Weather</h1>
+        <h1>Weatherly</h1>
         <p className="subtitle">Check the weather anywhere in the world</p>
       </header>
 
