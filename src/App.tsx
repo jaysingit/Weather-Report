@@ -13,7 +13,7 @@ function App() {
         <p className="subtitle">Check the weather anywhere in the world</p>
       </header>
 
-      <SearchBar onSearch={setCity} />
+      <SearchBar onSearch={setCity} onReset={() => setCity("")} />
 
       <main className="content">
         {city ? (

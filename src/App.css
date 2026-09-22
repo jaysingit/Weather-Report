@@ -27,6 +27,7 @@
 
 .search-bar input {
   flex: 1;
+  min-width: 0;
   padding: 10px 14px;
   border-radius: 8px;
   border: 1px solid var(--border);
@@ -34,17 +35,24 @@
 }
 
 .search-bar button {
-  padding: 10px 20px;
+  padding: 10px 16px;
   border-radius: 8px;
   border: none;
   background: var(--accent);
   color: #fff;
   font-weight: 600;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .search-bar button:hover {
   opacity: 0.9;
+}
+
+.search-bar .reset-button {
+  background: rgba(255, 255, 255, 0.35);
+  color: var(--text-h);
+  border: 1px solid var(--border);
 }
 
 .content {

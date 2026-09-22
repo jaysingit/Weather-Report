@@ -2,9 +2,10 @@ import { useState, type FormEvent } from "react";
 
 interface SearchBarProps {
   onSearch: (city: string) => void;
+  onReset: () => void;
 }
 
-function SearchBar({ onSearch }: SearchBarProps) {
+function SearchBar({ onSearch, onReset }: SearchBarProps) {
   const [value, setValue] = useState("");
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -13,6 +14,11 @@ function SearchBar({ onSearch }: SearchBarProps) {
     if (trimmed) {
       onSearch(trimmed);
     }
+  };
+
+  const handleReset = () => {
+    setValue("");
+    onReset();
   };
 
   return (
@@ -25,6 +31,9 @@ function SearchBar({ onSearch }: SearchBarProps) {
         aria-label="City name"
       />
       <button type="submit">Search</button>
+      <button type="button" className="reset-button" onClick={handleReset}>
+        Reset
+      </button>
     </form>
   );
 }
