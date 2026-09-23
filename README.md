@@ -1,13 +1,15 @@
 # Weatherly
 
-A weather app for checking current conditions anywhere in the world. Search any city to see live temperature, humidity, wind, and conditions, powered by the free, keyless [Open-Meteo](https://open-meteo.com/) geocoding and forecast APIs. Built with React, TypeScript, and Vite, and hosted as a static site on GitHub Pages — no backend, no database.
+A weather app for checking current conditions anywhere in the world. Search any city to see live temperature, humidity, wind, and conditions, powered by the free, keyless [Open-Meteo](https://open-meteo.com/) geocoding, forecast, and air quality APIs. Built with React, TypeScript, and Vite, and hosted as a static site on GitHub Pages — no backend, no database.
 
 **Live site:** https://jaysingit.github.io/Weatherly/
 
 ## Features
 
 - Search any city worldwide and get current weather (temperature, feels-like, humidity, wind, conditions)
-- Country flag and the city's own local time shown on the result card (Open-Meteo refreshes current conditions on a 15-minute interval, so the time reflects the latest available reading, not the live second)
+- UV index shown for every location; pollen level (Low/Moderate/High/Very High) shown for European locations, where Open-Meteo's pollen data is available — the row is hidden elsewhere rather than showing a placeholder
+- Country flag and the city's own local date/time shown on the result card (Open-Meteo refreshes current conditions on a 15-minute interval, so the time reflects the latest available reading, not the live second)
+- Empty searches are blocked (required field + disabled Search button) instead of silently doing nothing
 - Loading and error states for invalid/unmatched searches
 - Reset button to clear the search and result back to default
 - No API key or backend required — calls Open-Meteo directly from the browser
@@ -16,7 +18,7 @@ A weather app for checking current conditions anywhere in the world. Search any 
 
 - [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
 - [Vite](https://vite.dev/) for dev server and build
-- [Open-Meteo](https://open-meteo.com/) geocoding + forecast APIs
+- [Open-Meteo](https://open-meteo.com/) geocoding, forecast, and air quality (pollen) APIs
 - GitHub Pages + GitHub Actions for hosting/deployment
 
 ## React features used
@@ -35,14 +37,15 @@ A weather app for checking current conditions anywhere in the world. Search any 
 ```
 src/
   api/
-    weather.ts          # Open-Meteo geocoding + forecast API calls
+    weather.ts          # Open-Meteo geocoding, forecast + air quality API calls
   components/
     SearchBar.tsx        # City input, submit and reset controls
     WeatherDisplay.tsx   # Fetches and renders the weather card
   types/
     weather.ts           # Shared TypeScript types
   utils/
-    formatTime.ts        # Formats the location's local time
+    formatTime.ts        # Formats the location's local date/time
+    pollenLevel.ts        # Pollen concentration -> Low/Moderate/High/Very High
     weatherCodes.ts       # WMO weather code -> description/icon lookup
   App.tsx                 # Page layout and top-level state
   App.css                 # App-specific styles
