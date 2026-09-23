@@ -29,8 +29,11 @@ function SearchBar({ onSearch, onReset }: SearchBarProps) {
         value={value}
         onChange={(event) => setValue(event.target.value)}
         aria-label="City name"
+        required
       />
-      <button type="submit">Search</button>
+      <button type="submit" disabled={!value.trim()}>
+        Search
+      </button>
       <button type="button" className="reset-button" onClick={handleReset}>
         Reset
       </button>
