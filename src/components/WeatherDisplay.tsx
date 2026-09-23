@@ -3,6 +3,7 @@ import { getWeatherForCity, WeatherApiError } from "../api/weather";
 import type { WeatherResult } from "../types/weather";
 import { getWeatherCodeInfo } from "../utils/weatherCodes";
 import { formatLocalTime } from "../utils/formatTime";
+import { getPollenLevel } from "../utils/pollenLevel";
 
 interface WeatherDisplayProps {
   city: string;
@@ -89,6 +90,16 @@ function WeatherDisplay({ city }: WeatherDisplayProps) {
           <dt>Wind</dt>
           <dd>{Math.round(current.windSpeed)} km/h</dd>
         </div>
+        <div>
+          <dt>UV Index</dt>
+          <dd>{Math.round(current.uvIndex)}</dd>
+        </div>
+        {current.pollen !== null && (
+          <div>
+            <dt>Pollen</dt>
+            <dd>{getPollenLevel(current.pollen)}</dd>
+          </div>
+        )}
       </dl>
     </section>
   );

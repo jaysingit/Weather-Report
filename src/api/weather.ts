@@ -2,6 +2,19 @@ import type { GeocodingResult, WeatherResult } from "../types/weather";
 
 const GEOCODING_URL = "https://geocoding-api.open-meteo.com/v1/search";
 const FORECAST_URL = "https://api.open-meteo.com/v1/forecast";
+const AIR_QUALITY_URL = "https://air-quality-api.open-meteo.com/v1/air-quality";
+
+// Pollen coverage is Europe-only (CAMS European air quality model); every
+// field comes back null elsewhere, which fetchPollen turns into a single
+// `null` result so the UI can hide the row.
+const POLLEN_TYPES = [
+  "alder_pollen",
+  "birch_pollen",
+  "grass_pollen",
+  "mugwort_pollen",
+  "olive_pollen",
+  "ragweed_pollen",
+] as const;
 
 export class WeatherApiError extends Error {}
 
@@ -45,7 +58,7 @@ async function fetchCurrentWeather(
   url.searchParams.set("longitude", String(location.longitude));
   url.searchParams.set(
     "current",
-    "temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,is_day",
+    "temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,is_day,uv_index",
   );
   url.searchParams.set("timezone", "auto");
 
@@ -67,8 +80,36 @@ async function fetchCurrentWeather(
       weatherCode: current.weather_code,
       isDay: current.is_day === 1,
       time: current.time,
+      uvIndex: current.uv_index,
+      pollen: null,
     },
   };
+}
+
+async function fetchPollen(
+  location: GeocodingResult,
+  signal?: AbortSignal,
+): Promise<number | null> {
+  try {
+    const url = new URL(AIR_QUALITY_URL);
+    url.searchParams.set("latitude", String(location.latitude));
+    url.searchParams.set("longitude", String(location.longitude));
+    url.searchParams.set("current", POLLEN_TYPES.join(","));
+    url.searchParams.set("timezone", "auto");
+
+    const response = await fetch(url, { signal });
+    if (!response.ok) return null;
+
+    const data = await response.json();
+    const values = POLLEN_TYPES.map((key) => data.current?.[key]).filter(
+      (value: unknown): value is number => typeof value === "number",
+    );
+
+    return values.length > 0 ? Math.max(...values) : null;
+  } catch (err) {
+    if (err instanceof DOMException && err.name === "AbortError") throw err;
+    return null;
+  }
 }
 
 export async function getWeatherForCity(
@@ -76,5 +117,13 @@ export async function getWeatherForCity(
   signal?: AbortSignal,
 ): Promise<WeatherResult> {
   const location = await geocodeCity(city, signal);
-  return fetchCurrentWeather(location, signal);
+  const [weather, pollen] = await Promise.all([
+    fetchCurrentWeather(location, signal),
+    fetchPollen(location, signal),
+  ]);
+
+  return {
+    ...weather,
+    current: { ...weather.current, pollen },
+  };
 }

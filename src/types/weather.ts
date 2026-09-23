@@ -15,6 +15,8 @@ export interface CurrentWeather {
   weatherCode: number;
   isDay: boolean;
   time: string;
+  uvIndex: number;
+  pollen: number | null;
 }
 
 export interface WeatherResult {
