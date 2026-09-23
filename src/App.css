@@ -50,10 +50,15 @@
   opacity: 0.9;
 }
 
+.search-bar button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .search-bar .reset-button {
-  background: rgba(255, 255, 255, 0.35);
-  color: var(--text-h);
-  border: 1px solid var(--border);
+  background: rgba(91, 192, 248, 0.2);
+  color: #0c5f8a;
+  border: 1px solid rgba(91, 192, 248, 0.6);
 }
 
 .content {
