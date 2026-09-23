@@ -19,6 +19,17 @@ A weather app for checking current conditions anywhere in the world. Search any 
 - [Open-Meteo](https://open-meteo.com/) geocoding + forecast APIs
 - GitHub Pages + GitHub Actions for hosting/deployment
 
+## React features used
+
+- **Functional components + hooks** — `useState` for local UI state, `useEffect` for data fetching
+- **Effect cleanup with `AbortController`** — `WeatherDisplay` cancels the in-flight fetch if the searched city changes again before the previous request resolves, avoiding stale results
+- **Lifting state up** — `App` owns the `city` state and passes it down to `SearchBar` (via `onSearch`/`onReset`) and `WeatherDisplay` (via props), keeping the two components decoupled from each other
+- **Controlled form inputs** — the search box's value is fully driven by React state, not the DOM
+- **Conditional rendering** — loading, error, empty, and success states in `WeatherDisplay` are just different return values off the same component
+- **Component composition** — `SearchBar` and `WeatherDisplay` are small, single-purpose components composed together in `App`
+- **TypeScript-typed props and events** — every component has a typed props interface, and event handlers (e.g. `FormEvent<HTMLFormElement>`) are explicitly typed
+- **React Compiler** — enabled via `babel-plugin-react-compiler` in `vite.config.ts` for automatic memoization, so components aren't hand-wrapped in `useMemo`/`useCallback`
+
 ## Project structure
 
 ```
