@@ -2,7 +2,7 @@
 
 A weather app for checking current conditions anywhere in the world. Search any city to see live temperature, humidity, wind, and conditions, powered by the free, keyless [Open-Meteo](https://open-meteo.com/) geocoding and forecast APIs. Built with React, TypeScript, and Vite, and hosted as a static site on GitHub Pages — no backend, no database.
 
-**Live site:** https://jaysingit.github.io/Weather-Report/
+**Live site:** https://jaysingit.github.io/Weatherly/
 
 ## Features
 
@@ -76,4 +76,4 @@ This starts the Vite dev server (prints the local URL to open in your browser).
 
 ## Deployment
 
-Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds the app and deploys `dist/` to GitHub Pages automatically (requires **Settings → Pages → Source: GitHub Actions** to be set once in the repo). The Vite `base` in `vite.config.ts` is set to `/Weather-Report/` to match this repo's Pages URL.
+Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds the app and deploys `dist/` to GitHub Pages automatically (requires **Settings → Pages → Source: GitHub Actions** to be set once in the repo). The Vite `base` in `vite.config.ts` is set to `/Weatherly/` to match this repo's Pages URL.
