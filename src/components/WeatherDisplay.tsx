@@ -58,10 +58,15 @@ function WeatherDisplay({ city }: WeatherDisplayProps) {
   }
 
   const { location, current } = weather;
-  const { description, icon } = getWeatherCodeInfo(current.weatherCode);
+  const { description, icon } = getWeatherCodeInfo(
+    current.weatherCode,
+    current.isDay,
+  );
 
   return (
-    <section className="weather-card">
+    <section
+      className={`weather-card${current.isDay ? "" : " weather-card--night"}`}
+    >
       <div className="location-header">
         <img
           className="country-flag"

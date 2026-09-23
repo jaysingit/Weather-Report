@@ -35,6 +35,21 @@ const WEATHER_CODES: Record<number, WeatherCodeInfo> = {
   99: { description: "Thunderstorm with heavy hail", icon: "⛈️" },
 };
 
-export function getWeatherCodeInfo(code: number): WeatherCodeInfo {
-  return WEATHER_CODES[code] ?? { description: "Unknown", icon: "❓" };
+// Only clear/mostly-clear codes get a distinct night look (moon vs. sun) —
+// clouds, rain, snow, fog, and storms read the same regardless of time of day.
+const NIGHT_ICONS: Record<number, string> = {
+  0: "🌙",
+  1: "🌙",
+  2: "☁️",
+};
+
+export function getWeatherCodeInfo(
+  code: number,
+  isDay = true,
+): WeatherCodeInfo {
+  const info = WEATHER_CODES[code] ?? { description: "Unknown", icon: "❓" };
+  if (!isDay && code in NIGHT_ICONS) {
+    return { ...info, icon: NIGHT_ICONS[code] };
+  }
+  return info;
 }

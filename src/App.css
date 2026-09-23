@@ -82,6 +82,22 @@
   box-shadow: var(--shadow);
 }
 
+.weather-card--night {
+  --text: #cbd5e1;
+  --text-h: #f8fafc;
+  background:
+    radial-gradient(2px 2px at 20% 20%, rgba(255, 255, 255, 0.9), transparent 60%),
+    radial-gradient(1.5px 1.5px at 70% 15%, rgba(255, 255, 255, 0.8), transparent 60%),
+    radial-gradient(1.5px 1.5px at 40% 32%, rgba(255, 255, 255, 0.7), transparent 60%),
+    radial-gradient(2px 2px at 85% 40%, rgba(255, 255, 255, 0.8), transparent 60%),
+    radial-gradient(1px 1px at 55% 58%, rgba(255, 255, 255, 0.6), transparent 60%),
+    radial-gradient(1.5px 1.5px at 15% 70%, rgba(255, 255, 255, 0.7), transparent 60%),
+    radial-gradient(1px 1px at 90% 78%, rgba(255, 255, 255, 0.6), transparent 60%),
+    radial-gradient(1.5px 1.5px at 65% 88%, rgba(255, 255, 255, 0.8), transparent 60%),
+    linear-gradient(160deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 82, 0.75));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
 .location-header {
   display: flex;
   flex-direction: column;
