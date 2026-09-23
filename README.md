@@ -8,7 +8,8 @@ A weather app for checking current conditions anywhere in the world. Search any 
 
 - Search any city worldwide and get current weather (temperature, feels-like, humidity, wind, conditions)
 - UV index shown for every location; pollen level (Low/Moderate/High/Very High) shown for European locations, where Open-Meteo's pollen data is available — the row is hidden elsewhere rather than showing a placeholder
-- Country flag and the city's own local date/time shown on the result card (Open-Meteo refreshes current conditions on a 15-minute interval, so the time reflects the latest available reading, not the live second)
+- Country flag and the city's own local date/time shown on the result card, always in 12-hour AM/PM format regardless of the viewer's device or locale (Open-Meteo refreshes current conditions on a 15-minute interval, so the time reflects the latest available reading, not the live second)
+- Night look for the result card (dark starry background, moon icon) when it's currently night at the searched location, independent of your own local time
 - Empty searches are blocked (required field + disabled Search button) instead of silently doing nothing
 - Loading and error states for invalid/unmatched searches
 - Reset button to clear the search and result back to default
@@ -46,7 +47,7 @@ src/
   utils/
     formatTime.ts        # Formats the location's local date/time
     pollenLevel.ts        # Pollen concentration -> Low/Moderate/High/Very High
-    weatherCodes.ts       # WMO weather code -> description/icon lookup
+    weatherCodes.ts       # WMO weather code -> description/icon lookup (day/night variants)
   App.tsx                 # Page layout and top-level state
   App.css                 # App-specific styles
   index.css               # Global styles, theme variables, background
