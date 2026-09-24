@@ -23,3 +23,6 @@ export interface WeatherResult {
   location: GeocodingResult;
   current: CurrentWeather;
 }
+
+export type TemperatureUnit = "celsius" | "fahrenheit";
+export type WindUnit = "kmh" | "mph";

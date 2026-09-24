@@ -1,15 +1,26 @@
 import { useEffect, useState } from "react";
 import { getWeatherForCity, WeatherApiError } from "../api/weather";
-import type { WeatherResult } from "../types/weather";
+import type {
+  TemperatureUnit,
+  WeatherResult,
+  WindUnit,
+} from "../types/weather";
 import { getWeatherCodeInfo } from "../utils/weatherCodes";
 import { formatLocalTime } from "../utils/formatTime";
 import { getPollenLevel } from "../utils/pollenLevel";
+import { celsiusToFahrenheit, kmhToMph } from "../utils/units";
 
 interface WeatherDisplayProps {
   city: string;
+  temperatureUnit: TemperatureUnit;
+  windUnit: WindUnit;
 }
 
-function WeatherDisplay({ city }: WeatherDisplayProps) {
+function WeatherDisplay({
+  city,
+  temperatureUnit,
+  windUnit,
+}: WeatherDisplayProps) {
   const [weather, setWeather] = useState<WeatherResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -63,6 +74,19 @@ function WeatherDisplay({ city }: WeatherDisplayProps) {
     current.isDay,
   );
 
+  const isFahrenheit = temperatureUnit === "fahrenheit";
+  const isMph = windUnit === "mph";
+
+  const temperature = isFahrenheit
+    ? celsiusToFahrenheit(current.temperature)
+    : current.temperature;
+  const apparentTemperature = isFahrenheit
+    ? celsiusToFahrenheit(current.apparentTemperature)
+    : current.apparentTemperature;
+  const windSpeed = isMph ? kmhToMph(current.windSpeed) : current.windSpeed;
+  const temperatureUnitLabel = isFahrenheit ? "°F" : "°C";
+  const windUnitLabel = isMph ? "mph" : "km/h";
+
   return (
     <section
       className={`weather-card${current.isDay ? "" : " weather-card--night"}`}
@@ -80,12 +104,18 @@ function WeatherDisplay({ city }: WeatherDisplayProps) {
         <p className="local-time">{formatLocalTime(current.time)}</p>
       </div>
       <p className="weather-icon">{icon}</p>
-      <p className="temperature">{Math.round(current.temperature)}°C</p>
+      <p className="temperature">
+        {Math.round(temperature)}
+        {temperatureUnitLabel}
+      </p>
       <p className="description">{description}</p>
       <dl className="weather-details">
         <div>
           <dt>Feels like</dt>
-          <dd>{Math.round(current.apparentTemperature)}°C</dd>
+          <dd>
+            {Math.round(apparentTemperature)}
+            {temperatureUnitLabel}
+          </dd>
         </div>
         <div>
           <dt>Humidity</dt>
@@ -93,7 +123,9 @@ function WeatherDisplay({ city }: WeatherDisplayProps) {
         </div>
         <div>
           <dt>Wind</dt>
-          <dd>{Math.round(current.windSpeed)} km/h</dd>
+          <dd>
+            {Math.round(windSpeed)} {windUnitLabel}
+          </dd>
         </div>
         <div>
           <dt>UV Index</dt>
