@@ -18,6 +18,18 @@ const POLLEN_TYPES = [
 
 export class WeatherApiError extends Error {}
 
+// Open-Meteo's own current-conditions data only refreshes every 15 minutes
+// (see the `interval` field in its response), so caching for that long never
+// serves data staler than the API itself would return anyway.
+const CACHE_TTL_MS = 15 * 60 * 1000;
+
+interface CacheEntry {
+  result: WeatherResult;
+  timestamp: number;
+}
+
+const weatherCache = new Map<string, CacheEntry>();
+
 async function geocodeCity(
   city: string,
   signal?: AbortSignal,
@@ -116,14 +128,23 @@ export async function getWeatherForCity(
   city: string,
   signal?: AbortSignal,
 ): Promise<WeatherResult> {
+  const cacheKey = city.trim().toLowerCase();
+  const cached = weatherCache.get(cacheKey);
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+    return cached.result;
+  }
+
   const location = await geocodeCity(city, signal);
   const [weather, pollen] = await Promise.all([
     fetchCurrentWeather(location, signal),
     fetchPollen(location, signal),
   ]);
 
-  return {
+  const result: WeatherResult = {
     ...weather,
     current: { ...weather.current, pollen },
   };
+
+  weatherCache.set(cacheKey, { result, timestamp: Date.now() });
+  return result;
 }
