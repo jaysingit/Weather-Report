@@ -13,6 +13,7 @@ A weather app for checking current conditions anywhere in the world. Search any 
 - Empty searches are blocked (required field + disabled Search button) instead of silently doing nothing
 - Loading and error states for invalid/unmatched searches
 - Reset button to clear the search and result back to default
+- Open Graph / Twitter meta tags with a real screenshot, so sharing the link (LinkedIn, Slack, etc.) shows an actual preview instead of a blank card
 - No API key or backend required — calls Open-Meteo directly from the browser
 
 ## Tech stack
