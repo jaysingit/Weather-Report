@@ -7,6 +7,7 @@ A weather app for checking current conditions anywhere in the world. Search any 
 ## Features
 
 - Search any city worldwide and get current weather (temperature, feels-like, humidity, wind, conditions)
+- Independent °C/°F and km/h/mph toggles, converted client-side (no refetch) and remembered across visits via localStorage
 - UV index shown for every location; pollen level (Low/Moderate/High/Very High) shown for European locations, where Open-Meteo's pollen data is available — the row is hidden elsewhere rather than showing a placeholder
 - Country flag and the city's own local date/time shown on the result card, always in 12-hour AM/PM format regardless of the viewer's device or locale (Open-Meteo refreshes current conditions on a 15-minute interval, so the time reflects the latest available reading, not the live second)
 - Night look for the result card (dark starry background, moon icon) when it's currently night at the searched location, independent of your own local time
@@ -15,6 +16,7 @@ A weather app for checking current conditions anywhere in the world. Search any 
 - Reset button to clear the search and result back to default
 - Open Graph / Twitter meta tags with a real screenshot, so sharing the link (LinkedIn, Slack, etc.) shows an actual preview instead of a blank card
 - No API key or backend required — calls Open-Meteo directly from the browser
+- Results are cached in memory for 15 minutes (matching Open-Meteo's own refresh interval), so re-searching a city you already looked up returns instantly with zero extra API calls
 
 ## Tech stack
 
@@ -32,6 +34,7 @@ A weather app for checking current conditions anywhere in the world. Search any 
 - **Conditional rendering** — loading, error, empty, and success states in `WeatherDisplay` are just different return values off the same component
 - **Component composition** — `SearchBar` and `WeatherDisplay` are small, single-purpose components composed together in `App`
 - **TypeScript-typed props and events** — every component has a typed props interface, and event handlers (e.g. `FormEvent<HTMLFormElement>`) are explicitly typed
+- **Generic components** — `UnitToggle<T extends string>` is one reusable component that drives both the temperature and wind-speed toggles, instead of duplicating near-identical markup for each
 - **React Compiler** — enabled via `babel-plugin-react-compiler` in `vite.config.ts` for automatic memoization, so components aren't hand-wrapped in `useMemo`/`useCallback`
 
 ## Project structure
@@ -39,15 +42,17 @@ A weather app for checking current conditions anywhere in the world. Search any 
 ```
 src/
   api/
-    weather.ts          # Open-Meteo geocoding, forecast + air quality API calls
+    weather.ts          # Open-Meteo geocoding, forecast + air quality API calls, with a 15-min in-memory cache
   components/
     SearchBar.tsx        # City input, submit and reset controls
+    UnitToggle.tsx        # Generic °C/°F and km/h/mph toggle
     WeatherDisplay.tsx   # Fetches and renders the weather card
   types/
     weather.ts           # Shared TypeScript types
   utils/
     formatTime.ts        # Formats the location's local date/time
     pollenLevel.ts        # Pollen concentration -> Low/Moderate/High/Very High
+    units.ts               # Celsius <-> Fahrenheit, km/h <-> mph conversions
     weatherCodes.ts       # WMO weather code -> description/icon lookup (day/night variants)
   App.tsx                 # Page layout and top-level state
   App.css                 # App-specific styles
