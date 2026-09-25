@@ -1,8 +1,9 @@
 # Weatherly
 
-A weather app for checking current conditions anywhere in the world. Search any city to see live temperature, humidity, wind, and conditions, powered by the free, keyless [Open-Meteo](https://open-meteo.com/) geocoding, forecast, and air quality APIs. Built with React, TypeScript, and Vite, and hosted as a static site on GitHub Pages — no backend, no database.
+A weather app for checking current conditions anywhere in the world. Search any city to see live temperature, humidity, wind, and conditions, powered by the free, keyless [Open-Meteo](https://open-meteo.com/) geocoding, forecast, and air quality APIs. Built with React, TypeScript, and Vite, and hosted as a static site — no backend, no database.
 
-**Live site:** https://jaysingit.github.io/weatherly/
+**Live site (GitHub Pages):** https://jaysingit.github.io/weatherly/
+**Live site (Azure Static Web Apps):** https://jolly-bay-053bac810.5.azurestaticapps.net/
 
 ## Features
 
@@ -23,7 +24,7 @@ A weather app for checking current conditions anywhere in the world. Search any 
 - [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
 - [Vite](https://vite.dev/) for dev server and build
 - [Open-Meteo](https://open-meteo.com/) geocoding, forecast, and air quality (pollen) APIs
-- GitHub Pages + GitHub Actions for hosting/deployment
+- GitHub Pages and Azure Static Web Apps for hosting, both deployed via GitHub Actions
 
 ## React features used
 
@@ -61,7 +62,8 @@ src/
 public/
   favicon.svg              # Weather-themed favicon
 .github/workflows/
-  deploy.yml                # Builds and deploys to GitHub Pages on push to main
+  deploy.yml                                          # Builds and deploys to GitHub Pages on push to main
+  azure-static-web-apps-jolly-bay-053bac810.yml         # Builds and deploys to Azure Static Web Apps on push to main
 ```
 
 ## Getting started
@@ -86,4 +88,11 @@ This starts the Vite dev server (prints the local URL to open in your browser).
 
 ## Deployment
 
-Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds the app and deploys `dist/` to GitHub Pages automatically (requires **Settings → Pages → Source: GitHub Actions** to be set once in the repo). The Vite `base` in `vite.config.ts` is set to `/weatherly/` to match this repo's Pages URL.
+Every push to `main` triggers **two independent** GitHub Actions workflows, each building and deploying the app to a different host:
+
+- **`deploy.yml`** — builds and deploys `dist/` to GitHub Pages (requires **Settings → Pages → Source: GitHub Actions** to be set once in the repo)
+- **`azure-static-web-apps-jolly-bay-053bac810.yml`** — auto-generated when the Azure Static Web App resource was created and linked to this repo; builds and deploys to Azure via `Azure/static-web-apps-deploy@v1`, using an API token stored as a GitHub Actions secret
+
+They don't interact with or depend on each other — if one fails, the other still deploys normally.
+
+GitHub Pages serves this app under a `/weatherly/` subpath, while Azure Static Web Apps serves it at its domain root. To keep a single build working on both without maintaining two configs, the Vite `base` in `vite.config.ts` is set to the relative path `./` rather than an absolute one — asset URLs resolve correctly regardless of which directory `index.html` itself is served from.
